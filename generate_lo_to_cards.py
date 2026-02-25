@@ -13,8 +13,10 @@ def generate_lo_to_card():
     - Column 2: numbers 20-29
     - ... and so on
     - Column 8: numbers 80-90
+    - No duplicate numbers on the same card
     """
     card = []
+    used_numbers = set()
     
     for row in range(3):
         row_data = [None] * 9
@@ -24,18 +26,20 @@ def generate_lo_to_card():
         for col in positions:
             # Determine number range for this column
             if col == 0:
-                number = random.randint(1, 9)
+                available = [n for n in range(1, 10) if n not in used_numbers]
             elif col == 8:
-                number = random.randint(80, 90)
+                available = [n for n in range(80, 91) if n not in used_numbers]
             else:
-                number = random.randint(col * 10, col * 10 + 9)
+                available = [n for n in range(col * 10, col * 10 + 10) if n not in used_numbers]
             
-            row_data[col] = number
+            if available:
+                number = random.choice(available)
+                row_data[col] = number
+                used_numbers.add(number)
         
         card.append(row_data)
     
-    # Ensure no duplicate numbers in the card
-    # Sort numbers in each column
+    # Sort numbers in each column for traditional Lo To appearance
     for col in range(9):
         column_numbers = [card[row][col] for row in range(3) if card[row][col] is not None]
         column_numbers.sort()
